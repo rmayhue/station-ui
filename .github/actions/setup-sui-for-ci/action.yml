@@ -1,0 +1,36 @@
+name: Setup Station UI app for CI
+runs:
+  using: "composite"
+  steps:
+    - uses: erlef/setup-elixir@v1
+      with:
+        otp-version: ${{ env.OTP_VERSION }}
+        elixir-version: ${{ env.ELIXIR_VERSION }}
+
+    - uses: actions/cache@v3
+      with:
+        path: deps
+        key: ${{ runner.os }}-mix-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.lock')) }}
+        restore-keys: |
+          ${{ runner.os }}-mix-x
+
+    - name: Retrieve Mix Build Cache
+      uses: actions/cache@v3
+      id: mix-build-cache #id to use in retrieve action
+      with:
+        path: |
+          _build/test/lib
+          ~/.mix
+        key: ${{ runner.os }}-${{ env.OTP_VERSION }}-${{ env.ELIXIR_VERSION }}-mix-build-${{ github.event.pull_request.base.sha }}-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.lock')) }}
+        restore-keys: |
+          ${{ runner.os }}-${{ env.OTP_VERSION }}-${{ env.ELIXIR_VERSION }}-mix-build-${{ github.event.pull_request.base.sha }}-
+          ${{ runner.os }}-${{ env.OTP_VERSION }}-${{ env.ELIXIR_VERSION }}-mix-build-
+
+    - run: mix local.rebar --force --if-missing
+      shell: bash
+
+    - run: mix local.hex --force --if-missing
+      shell: bash
+
+    - run: mix deps.get
+      shell: bash
