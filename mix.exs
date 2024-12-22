@@ -36,9 +36,9 @@ defmodule StationUI.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:gettext, "~> 0.20"},
-      {:phoenix, "~> 1.7.11"},
-      {:phoenix_live_view, "~> 0.20.7"},
+      {:gettext, "~> 0.26"},
+      {:phoenix, "~> 1.7.18"},
+      {:phoenix_live_view, "~> 1.0.0"},
       {:credo, "~> 1.7.10", only: [:dev, :test], runtime: false},
       {:tailwind_formatter, "~> 0.3.5", only: [:dev, :test], runtime: false}
     ]
